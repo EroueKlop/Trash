@@ -1,0 +1,56 @@
+#!/bin/bash
+
+case "$1" in
+ -h|--help)
+  printf 'Trash: Simple Password Manager using AES 256\n'
+  printf 'Usage: \n -h,--help\n entry-new,remove,edit\n wallet-list,new,delete\n' 
+  ;;
+
+  wallet-list)
+  printf 'Primary directory\n'
+  ls $HOME/.trash.creds/
+  echo
+  printf 'Secondary directory\n'
+  ls $HOME/.config/creds/
+  ;;
+  
+  wallet-new)
+  read -p "Enter wallet name: " walletname
+  read -s -p"Enter wallet passphrase: " walletpassphrase1
+  echo
+  read -s -p "Enter wallet passphrase again: " walletpassphrase2
+  echo
+  if [ "$walletpassphrase1" = "$walletpassphrase2" ]; then
+     mkdir -p $HOME/.trash.creds
+     mkdir -p $HOME/.config/creds
+     mkdir $HOME/.trash.creds/$walletname
+     mkdir $HOME/.config/creds/$walletname
+     echo "Wallet created"
+  else
+     echo "Passwords do not match"
+  fi
+  ;;
+
+  wallet-delete)
+  printf 'Primary directory\n'
+  ls $HOME/.trash.creds/
+  echo
+  printf 'Secondary directory\n'
+  ls $HOME/.config/creds/
+  echo
+  read -p "Delete which wallet ? : " walletdelete
+  read -p "Are you sure you want to delete $walletdelete ? [y/n]: " prompt1
+  if [ $prompt1 = y ]; then
+     rm -rf $HOME/.trash.creds/$walletdelete
+     rm -rf $HOME/.config/creds/$walletdelete
+  else
+     exit
+  fi
+  ;;
+
+
+*)
+  printf 'Trash: Simple Password Manager using AES 256\n'
+  printf 'Usage: \n -h,--help\n entry-new,remove,edit\n wallet-list,new,delete\n' 
+  ;;
+esac
